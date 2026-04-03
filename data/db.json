@@ -1,0 +1,102 @@
+{
+  "qr_coupons": [
+    {
+      "uniqueCode": "14D3E1",
+      "value": 50,
+      "_id": "809fd9fd-0c33-457b-87c8-f845fcda2119",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-03T05:35:40.677Z"
+    },
+    {
+      "uniqueCode": "516DA9",
+      "value": 50,
+      "_id": "04d06089-e18f-462b-b195-5488ddb7a393",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-03T05:35:40.677Z"
+    },
+    {
+      "uniqueCode": "0F350D",
+      "value": 50,
+      "_id": "ea37e71e-7d71-45cf-9d35-104cc65a4739",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-03T05:35:40.677Z"
+    },
+    {
+      "uniqueCode": "96AA49",
+      "value": 50,
+      "_id": "5656afd2-3374-4c1f-98a6-90be15ca2ac4",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-03T05:35:40.677Z"
+    },
+    {
+      "uniqueCode": "F87CE8",
+      "value": 50,
+      "_id": "32ada512-409d-4bed-af4f-68f2989f74ef",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-03T05:35:40.677Z"
+    },
+    {
+      "uniqueCode": "A307D5",
+      "value": 50,
+      "_id": "31e43712-14d7-4e99-9151-b3f712bcf225",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-03T05:35:40.677Z"
+    },
+    {
+      "uniqueCode": "B789A4",
+      "value": 50,
+      "_id": "98793d82-b1ed-4a6b-8453-b86784d26ba9",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-03T05:35:40.677Z"
+    },
+    {
+      "uniqueCode": "5FE188",
+      "value": 50,
+      "_id": "eb300881-40d4-4dfa-999b-6f908fee5a22",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-03T05:35:40.677Z"
+    },
+    {
+      "uniqueCode": "EC1814",
+      "value": 50,
+      "_id": "f3ed0223-4bc6-40a2-a169-f9371e209ae9",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-03T05:35:40.677Z"
+    },
+    {
+      "uniqueCode": "70F26D",
+      "value": 50,
+      "_id": "da90ea5a-efe3-4719-a85b-2b7a1612ab61",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-03T05:35:40.677Z"
+    }
+  ],
+  "submissions": [
+    {
+      "qrCouponId": "e31df2f7-17be-4b38-9942-2a6e8822bc0e",
+      "name": "gaurav",
+      "mobile": "8130501014",
+      "accountType": "UPI_NUMBER",
+      "accountValue": "8130501014",
+      "_id": "9e4c9cba-306c-4f75-ba76-df0605cab73f",
+      "status": "PAID",
+      "createdAt": "2026-04-02T12:35:29.901Z"
+    }
+  ],
+  "admins": [
+    {
+      "username": "admin",
+      "passwordHash": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9"
+    }
+  ]
+}

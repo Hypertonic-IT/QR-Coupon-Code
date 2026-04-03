@@ -1,0 +1,42 @@
+{
+  "name": "qr-coupon-cashback",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@types/bcryptjs": "^3.0.0",
+    "@types/qrcode": "^1.5.6",
+    "axios": "^1.14.0",
+    "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.9.0",
+    "clsx": "^2.1.1",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.7",
+    "jszip": "^3.10.1",
+    "lucide-react": "^1.7.0",
+    "mongoose": "^9.3.3",
+    "next": "16.2.2",
+    "next-auth": "^4.24.13",
+    "papaparse": "^5.5.3",
+    "qrcode": "^1.5.4",
+    "qrcode.react": "^4.2.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@types/jspdf": "^2.0.0",
+    "@types/jszip": "^3.4.1",
+    "@types/node": "^20",
+    "@types/papaparse": "^5.5.2",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.2",
+    "typescript": "^5"
+  }
+}
