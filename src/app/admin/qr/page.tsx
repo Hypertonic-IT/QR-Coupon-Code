@@ -10,7 +10,6 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { QRCodeSVG, QRCodeCanvas } from 'qrcode.react';
-import JSZip from 'jszip';
 
 /* ═══════════════════════════════════════════
    Copy Chip
@@ -124,7 +123,8 @@ export default function QRManagement() {
     const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
     const [bulkDeleteLoading, setBulkDeleteLoading] = useState(false);
     const [showBulkDelete, setShowBulkDelete] = useState(false);
-    const [bulkExportLoading, setBulkExportLoading] = useState<'download' | 'print' | null>(null);
+    const [showBulkExport, setShowBulkExport] = useState(false);
+    const [bulkExporting, setBulkExporting] = useState(false);
 
     const [toasts, setToasts] = useState<{ id: number; msg: string; type: 'success' | 'error' }[]>([]);
     const toastId = useRef(0);
@@ -232,67 +232,63 @@ export default function QRManagement() {
         } finally { setBulkDeleteLoading(false); }
     };
 
-    /* Bulk Export / Print */
-    const handleBulkDownload = async () => {
-        setBulkExportLoading('download');
+    /* Bulk Export */
+    const handleBulkDownloadZip = async () => {
+        setBulkExporting(true);
         try {
+            const imported = await import('jszip');
+            const JSZip = imported.default || imported;
             const zip = new JSZip();
-            for (const id of Array.from(selectedIds)) {
-                const qr = qrs.find((q: any) => q._id === id);
-                if (!qr) continue;
-                const canvas = document.getElementById(`qr-bulk-${qr.uniqueCode}`) as HTMLCanvasElement;
-                if (canvas) {
-                    const dataUrl = canvas.toDataURL('image/png');
-                    const b64Data = dataUrl.split(',')[1];
-                    zip.file(`Coupon-${qr.uniqueCode}-${printSize}px.png`, b64Data, { base64: true });
+
+            Array.from(selectedIds).forEach(id => {
+                const canvas = document.getElementById(`qr-bulk-${id}`) as HTMLCanvasElement;
+                const qData = qrs.find(q => q._id === id);
+                if (canvas && qData) {
+                    const data = canvas.toDataURL('image/png').split(',')[1];
+                    zip.file(`Coupon-${qData.uniqueCode}-${printSize}px.png`, data, { base64: true });
                 }
-            }
-            const content = await zip.generateAsync({ type: 'blob' });
-            const url = URL.createObjectURL(content);
+            });
+
+            const blob = await zip.generateAsync({ type: 'blob' });
+            const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `Bulk_Coupons_${selectedIds.size}.zip`;
+            link.download = `Cashback-Coupons-Bulk.zip`;
             link.click();
-            URL.revokeObjectURL(url);
-            toast(`Downloaded ${selectedIds.size} coupons`);
+            toast('Downloaded ZIP successfully!');
+        } catch (e) {
+            toast('Export failed', 'error');
         } finally {
-            setBulkExportLoading(null);
+            setBulkExporting(false);
+            setShowBulkExport(false);
         }
     };
 
-    const handleBulkPrint = async () => {
-        setBulkExportLoading('print');
-        try {
-            const win = window.open('');
-            if (!win) return toast('Pop-up blocked', 'error');
+    const handleBulkPrint = () => {
+        const win = window.open('');
+        if (!win) return;
+        let htmlSnippet = `<html><head><title>Print Bulk Coupons</title><style>
+            body { font-family: sans-serif; text-align: center; margin: 0; padding: 20px; box-sizing: border-box; }
+            .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 30px; justify-items: center; }
+            .item { break-inside: avoid; display: flex; flex-direction: column; align-items: center; border: 2px dashed #e2e8f0; padding: 20px; border-radius: 16px; width: 100%; box-sizing: border-box; }
+            img { width: 100%; height: auto; max-width: ${printSize}px; }
+            p { font-size: 18px; font-weight: 900; margin: 12px 0 6px; color: #0f172a; letter-spacing: 0.05em; }
+            .val { margin: 0; color: #166534; font-weight: 800; background: #f0fdf4; padding: 6px 12px; border-radius: 8px; font-size: 16px; border: 1px solid #bbf7d0; }
+        </style></head><body><div class="grid">`;
 
-            win.document.write(`
-                <html><head><title>Print ${selectedIds.size} Coupons</title>
-                <style>
-                    body { margin: 0; padding: 20px; display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; background: white; }
-                    .page-break { page-break-inside: avoid; margin-bottom: 20px; text-align: center; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; }
-                </style></head><body>
-            `);
-
-            for (const id of Array.from(selectedIds)) {
-                const qr = qrs.find((q: any) => q._id === id);
-                if (!qr) continue;
-                const canvas = document.getElementById(`qr-bulk-${qr.uniqueCode}`) as HTMLCanvasElement;
-                if (canvas) {
-                    win.document.write(`
-                        <div class="page-break">
-                            <img src="${canvas.toDataURL('image/png')}" style="width:${printSize}px; height:${printSize}px;" />
-                            <div style="font-size:14px; margin-top:8px; font-weight:800; letter-spacing:1px; color:#334155;">#${qr.uniqueCode}</div>
-                        </div>
-                    `);
-                }
+        Array.from(selectedIds).forEach(id => {
+            const canvas = document.getElementById(`qr-bulk-${id}`) as HTMLCanvasElement;
+            const qData = qrs.find(q => q._id === id);
+            if (canvas && qData) {
+                const url = canvas.toDataURL('image/png');
+                htmlSnippet += `<div class="item"><img src="${url}" /><p>${qData.uniqueCode}</p><div class="val">₹${qData.value} Cashback</div></div>`;
             }
+        });
 
-            win.document.write(`</body><script>window.onload=function(){window.print();window.close();}</script></html>`);
-            win.document.close();
-        } finally {
-            setBulkExportLoading(null);
-        }
+        htmlSnippet += `</div><script>window.onload = function() { window.print(); window.close(); }</script></body></html>`;
+        win.document.write(htmlSnippet);
+        win.document.close();
+        setShowBulkExport(false);
     };
 
     const total = qrs.length;
@@ -346,6 +342,9 @@ export default function QRManagement() {
                         </div>
                     </div>
                     <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                        <button onClick={() => router.push('/admin/qr/generate')} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '0 14px', height: 36, background: '#4f46e5', color: '#fff', border: 'none', borderRadius: 9, fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', boxShadow: '0 2px 8px rgba(79,70,229,0.3)' }}>
+                            <Sparkles size={13} /> Generate Codes
+                        </button>
                         <a href="/api/admin/export-csv" target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '0 14px', height: 36, background: '#f8fafc', color: '#475569', border: '1px solid #e2e8f0', borderRadius: 9, fontSize: '0.8rem', fontWeight: 600, textDecoration: 'none' }}>
                             <Download size={13} /> Export CSV
                         </a>
@@ -387,103 +386,26 @@ export default function QRManagement() {
                         ))}
                     </div>
 
-                    {/* ── GENERATOR PANEL ── */}
-                    <div style={{ background: 'linear-gradient(140deg,#0f0c29 0%,#302b63 45%,#24243e 100%)', borderRadius: 20, marginBottom: 22, position: 'relative', overflow: 'hidden', boxShadow: '0 16px 48px rgba(15,12,41,0.4)' }}>
-                        <div style={{ position: 'absolute', top: -100, right: -80, width: 360, height: 360, background: 'radial-gradient(circle,rgba(99,102,241,0.15) 0%,transparent 65%)', borderRadius: '50%', pointerEvents: 'none' }} />
-                        <div style={{ position: 'absolute', bottom: -60, left: -40, width: 220, height: 220, background: 'radial-gradient(circle,rgba(139,92,246,0.12) 0%,transparent 65%)', borderRadius: '50%', pointerEvents: 'none' }} />
-                        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px)', backgroundSize: '32px 32px', pointerEvents: 'none' }} />
-                        <div style={{ position: 'relative', zIndex: 1, padding: '28px 32px' }}>
-                            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                                    <div style={{ width: 46, height: 46, borderRadius: 13, background: 'rgba(99,102,241,0.25)', border: '1px solid rgba(99,102,241,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                        <Sparkles size={21} color="#a5b4fc" />
-                                    </div>
-                                    <div>
-                                        <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#fff', letterSpacing: '-0.025em' }}>Bulk Generator</div>
-                                        <div style={{ fontSize: '0.78rem', color: 'rgba(165,180,252,0.6)', marginTop: 3 }}>Create batches of QR coupons instantly</div>
-                                    </div>
-                                </div>
-                                {success && (
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(52,211,153,0.3)', borderRadius: 10, padding: '8px 14px', fontSize: '0.82rem', fontWeight: 600, color: '#6ee7b7' }}>
-                                        <CheckCircle2 size={14} /> {success}
-                                    </div>
-                                )}
-                            </div>
-                            <form onSubmit={handleGenerate}>
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto auto', gap: 12, alignItems: 'end' }}>
-                                    <div>
-                                        <label style={{ display: 'block', fontSize: '0.69rem', fontWeight: 700, color: 'rgba(165,180,252,0.7)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8 }}>Quantity</label>
-                                        <div style={{ position: 'relative' }}>
-                                            <input type="number" value={count} min={1} max={500} onChange={e => setCount(parseInt(e.target.value) || 1)}
-                                                style={{ width: '100%', height: 46, boxSizing: 'border-box', paddingLeft: 42, paddingRight: 14, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 11, fontSize: '1rem', fontWeight: 700, color: '#fff', outline: 'none' }}
-                                                onFocus={e => { e.target.style.borderColor = 'rgba(165,180,252,0.6)'; e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.2)'; }}
-                                                onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.15)'; e.target.style.boxShadow = 'none'; }}
-                                            />
-                                            <QrCode size={15} color="rgba(165,180,252,0.5)" style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label style={{ display: 'block', fontSize: '0.69rem', fontWeight: 700, color: 'rgba(165,180,252,0.7)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8 }}>Cashback Value (₹)</label>
-                                        <div style={{ position: 'relative' }}>
-                                            <input type="number" value={value} min={1} onChange={e => setValue(parseInt(e.target.value) || 1)}
-                                                style={{ width: '100%', height: 46, boxSizing: 'border-box', paddingLeft: 42, paddingRight: 14, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 11, fontSize: '1rem', fontWeight: 700, color: '#fff', outline: 'none' }}
-                                                onFocus={e => { e.target.style.borderColor = 'rgba(165,180,252,0.6)'; e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.2)'; }}
-                                                onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.15)'; e.target.style.boxShadow = 'none'; }}
-                                            />
-                                            <span style={{ position: 'absolute', left: 15, top: '50%', transform: 'translateY(-50%)', fontSize: '0.9rem', color: 'rgba(165,180,252,0.5)', fontWeight: 700, pointerEvents: 'none' }}>₹</span>
-                                        </div>
-                                    </div>
-                                    <div style={{ height: 46, padding: '0 18px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 11, display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
-                                        <span style={{ fontSize: '0.75rem', color: 'rgba(165,180,252,0.6)', fontWeight: 600 }}>Total</span>
-                                        <span style={{ fontSize: '1rem', fontWeight: 900, color: '#c7d2fe' }}>₹{(count * value).toLocaleString('en-IN')}</span>
-                                    </div>
-                                    <button type="submit" disabled={generating} style={{ height: 46, padding: '0 22px', background: generating ? 'rgba(255,255,255,0.06)' : 'linear-gradient(135deg,#6366f1,#8b5cf6)', color: generating ? 'rgba(255,255,255,0.4)' : '#fff', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 11, cursor: generating ? 'not-allowed' : 'pointer', fontSize: '0.88rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: 8, boxShadow: generating ? 'none' : '0 4px 16px rgba(99,102,241,0.5)', whiteSpace: 'nowrap' }}>
-                                        {generating ? <><Loader2 size={15} style={{ animation: 'spin 1s linear infinite' }} /> Generating…</> : <><Zap size={15} /> Generate Coupons</>}
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+
 
                     {/* ── TABLE CARD ── */}
                     <div style={{ ...cardBase }}>
                         {/* Toolbar */}
                         <div style={{ padding: '16px 22px', borderBottom: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', minHeight: 64 }}>
                             {selectedIds.size > 0 ? (
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 14, animation: 'slideup 0.2s ease', flexWrap: 'wrap' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 14, animation: 'slideup 0.2s ease' }}>
                                     <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#0f172a' }}>{selectedIds.size} Selected</div>
-
-                                    {/* Bulk Export Toolbar */}
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#f8fafc', padding: '4px', borderRadius: 10, border: '1px solid #e2e8f0' }}>
-                                        <select
-                                            value={printSize}
-                                            onChange={e => setPrintSize(Number(e.target.value))}
-                                            style={{ height: 32, padding: '0 8px', borderRadius: 7, border: '1px solid #cbd5e1', background: '#fff', fontSize: '0.78rem', fontWeight: 600, color: '#334155', outline: 'none', cursor: 'pointer' }}
-                                        >
-                                            <option value={256}>Small</option>
-                                            <option value={512}>Medium</option>
-                                            <option value={1024}>Large</option>
-                                            <option value={2048}>Poster</option>
-                                        </select>
-                                        <button onClick={handleBulkDownload} disabled={bulkExportLoading !== null} style={{ height: 32, padding: '0 12px', display: 'flex', alignItems: 'center', gap: 5, background: '#fff', border: '1px solid #cbd5e1', borderRadius: 7, fontSize: '0.78rem', fontWeight: 700, color: '#334155', cursor: bulkExportLoading ? 'wait' : 'pointer' }}
-                                            onMouseEnter={e => { if (!bulkExportLoading) (e.currentTarget as HTMLElement).style.background = '#f1f5f9'; }} onMouseLeave={e => { if (!bulkExportLoading) (e.currentTarget as HTMLElement).style.background = '#fff'; }}
-                                        >
-                                            {bulkExportLoading === 'download' ? <Loader2 size={13} style={{ animation: 'spin 1s linear infinite' }} /> : <Download size={13} />}
-                                            Zip
-                                        </button>
-                                        <button onClick={handleBulkPrint} disabled={bulkExportLoading !== null} style={{ height: 32, padding: '0 12px', display: 'flex', alignItems: 'center', gap: 5, background: '#4f46e5', border: 'none', borderRadius: 7, fontSize: '0.78rem', fontWeight: 700, color: '#fff', cursor: bulkExportLoading ? 'wait' : 'pointer' }}
-                                            onMouseEnter={e => { if (!bulkExportLoading) (e.currentTarget as HTMLElement).style.background = '#4338ca'; }} onMouseLeave={e => { if (!bulkExportLoading) (e.currentTarget as HTMLElement).style.background = '#4f46e5'; }}
-                                        >
-                                            {bulkExportLoading === 'print' ? <Loader2 size={13} style={{ animation: 'spin 1s linear infinite' }} /> : <Printer size={13} />}
-                                            Print
-                                        </button>
-                                    </div>
-
+                                    <button onClick={() => setShowBulkExport(true)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '7px 14px', background: '#eef2ff', color: '#4f46e5', border: '1px solid #c7d2fe', borderRadius: 9, fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.15s' }}
+                                        onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = '#e0e7ff'; el.style.borderColor = '#a5b4fc'; }}
+                                        onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = '#eef2ff'; el.style.borderColor = '#c7d2fe'; }}
+                                    >
+                                        <Download size={13} /> Export Selected
+                                    </button>
                                     <button onClick={() => setShowBulkDelete(true)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '7px 14px', background: '#fff1f2', color: '#dc2626', border: '1px solid #fecaca', borderRadius: 9, fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.15s' }}
                                         onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = '#fee2e2'; el.style.borderColor = '#fca5a5'; }}
                                         onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = '#fff1f2'; el.style.borderColor = '#fecaca'; }}
                                     >
-                                        <Trash2 size={13} /> Delete
+                                        <Trash2 size={13} /> Delete Selected
                                     </button>
                                 </div>
                             ) : (
@@ -739,12 +661,51 @@ export default function QRManagement() {
                 />
             )}
 
-            {/* Hidden canvas pool for bulk export */}
+            {/* ══ BULK EXPORT MODAL ══ */}
+            {showBulkExport && (
+                <div style={{ position: 'fixed', inset: 0, zIndex: 3000, background: 'rgba(15,23,42,0.6)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'fadeIn 0.2s ease' }} onClick={() => !bulkExporting && setShowBulkExport(false)}>
+                    <div onClick={e => e.stopPropagation()} style={{ background: '#fff', width: '90%', maxWidth: 380, borderRadius: 24, padding: 32, textAlign: 'center', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.3)', animation: 'slideup 0.2s ease', position: 'relative' }}>
+                        <button onClick={() => setShowBulkExport(false)} disabled={bulkExporting} style={{ position: 'absolute', top: 20, right: 20, background: '#f1f5f9', border: 'none', width: 32, height: 32, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: bulkExporting ? 'not-allowed' : 'pointer', color: '#64748b' }}>
+                            <X size={16} />
+                        </button>
+
+                        <div style={{ width: 64, height: 64, background: '#eef2ff', borderRadius: '50%', margin: '0 auto 16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4f46e5' }}>
+                            <Download size={28} strokeWidth={2.5} />
+                        </div>
+                        <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', marginBottom: 6 }}>Export {selectedIds.size} Coupons</div>
+                        <div style={{ fontSize: '0.88rem', color: '#64748b', marginBottom: 26, lineHeight: 1.5 }}>
+                            Download a ZIP archive or perfectly arrange them on a printable sheet.
+                        </div>
+
+                        <div style={{ textAlign: 'left', marginBottom: 24 }}>
+                            <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 8, display: 'block' }}>Resolution / Print Quality</label>
+                            <select value={printSize} onChange={e => setPrintSize(Number(e.target.value))} style={{ width: '100%', height: 44, padding: '0 14px', borderRadius: 10, border: '1px solid #cbd5e1', background: '#f8fafc', fontSize: '0.9rem', fontWeight: 600, color: '#334155', outline: 'none', cursor: 'pointer', appearance: 'none' }}>
+                                <option value={256}>Small — 256 x 256 px</option>
+                                <option value={512}>Medium — 512 x 512 px</option>
+                                <option value={1024}>Large — 1024 x 1024 px</option>
+                                <option value={2048}>Poster — 2048 x 2048 px</option>
+                            </select>
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                            <button onClick={handleBulkDownloadZip} disabled={bulkExporting} style={{ height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#fff', border: '2px solid #e2e8f0', borderRadius: 12, fontSize: '0.88rem', fontWeight: 700, color: '#334155', cursor: bulkExporting ? 'wait' : 'pointer' }}>
+                                {bulkExporting ? <Loader2 size={15} style={{ animation: 'spin 1s linear infinite' }} /> : <Download size={15} />} {bulkExporting ? 'Zipping...' : 'Zip PNGs'}
+                            </button>
+
+                            <button onClick={handleBulkPrint} disabled={bulkExporting} style={{ height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#4f46e5', border: 'none', borderRadius: 12, fontSize: '0.88rem', fontWeight: 700, color: '#fff', cursor: bulkExporting ? 'wait' : 'pointer', boxShadow: '0 4px 12px rgba(79,70,229,0.25)' }}>
+                                <Printer size={15} /> Print Sheet
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Hidden Canvases for Bulk Data Handling */}
             <div style={{ display: 'none' }}>
                 {Array.from(selectedIds).map(id => {
-                    const qr = qrs.find((q: any) => q._id === id);
-                    if (!qr) return null;
-                    return <QRCodeCanvas key={`export-${id}`} id={`qr-bulk-${qr.uniqueCode}`} value={`${origin}/reward/${qr.uniqueCode}`} size={printSize} marginSize={2} />;
+                    const qData = qrs.find(q => q._id === id);
+                    if (!qData) return null;
+                    return <QRCodeCanvas key={`bulk-${id}`} id={`qr-bulk-${id}`} value={`${origin}/reward/${qData.uniqueCode}`} size={printSize} marginSize={2} />;
                 })}
             </div>
 

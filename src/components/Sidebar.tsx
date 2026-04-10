@@ -1,12 +1,14 @@
 'use client';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { QrCode, LayoutDashboard, Users, Download, LogOut } from 'lucide-react';
+import { QrCode, LayoutDashboard, Users, Download, LogOut, KeyRound, Sparkles } from 'lucide-react';
 
 const nav = [
     { label: 'Overview', href: '/admin', icon: LayoutDashboard },
     { label: 'QR Codes', href: '/admin/qr', icon: QrCode },
+    { label: 'Generate Codes', href: '/admin/qr/generate', icon: Sparkles },
     { label: 'Customers', href: '/admin/customers', icon: Users },
+    { label: 'Change Password', href: '/admin/change-password', icon: KeyRound },
 ];
 
 const actions = [

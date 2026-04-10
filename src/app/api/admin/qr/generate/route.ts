@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
 
         const created = storage.addCoupons(couponsToCreate);
 
-        return NextResponse.json({ message: `${created.length} coupons generated` }, { status: 201 });
+        return NextResponse.json({ message: `${created.length} coupons generated`, created }, { status: 201 });
     } catch (error: any) {
         console.error('QR creation error:', error);
         return NextResponse.json({ message: 'Internal server error' }, { status: 500 });

@@ -132,6 +132,16 @@ export const storage = {
 
     // Admin methods
     getAdmin: (username: string) => readDB().admins.find((a: any) => a.username === username),
+    updateAdminPassword: (username: string, newPasswordHash: string) => {
+        const db = readDB();
+        const admin = db.admins.find((a: any) => a.username === username);
+        if (admin) {
+            admin.passwordHash = newPasswordHash;
+            writeDB(db);
+            return true;
+        }
+        return false;
+    },
 
     // Stats
     getStats: () => {

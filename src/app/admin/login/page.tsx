@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { QrCode, Eye, EyeOff, ArrowRight, Shield, Zap, BarChart3, Loader2 } from 'lucide-react';
 
 const features = [
@@ -92,7 +93,12 @@ export default function LoginPage() {
                         </div>
 
                         <div className="form-field">
-                            <label className="form-label">Password</label>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <label className="form-label">Password</label>
+                                <Link href="/admin/forgot-password" style={{ fontSize: 13, color: 'var(--primary)', textDecoration: 'none', marginBottom: 6 }}>
+                                    Forgot password?
+                                </Link>
+                            </div>
                             <div style={{ position: 'relative' }}>
                                 <input
                                     className="input input-lg"
