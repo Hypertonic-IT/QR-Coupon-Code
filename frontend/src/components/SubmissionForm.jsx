@@ -29,17 +29,31 @@ export default function SubmissionForm({ couponId, uniqueCode }) {
     setError(null);
 
     const formData = new FormData(e.currentTarget);
-    formData.append("qrCouponId", couponId);
-    formData.append("uniqueCode", uniqueCode);
-    formData.append("screenshot", screenshotPreview || "");
+    const payload = {
+      qrCouponId: couponId,
+      code: uniqueCode,
+      screenshot: screenshotPreview || "",
+      name: formData.get("name"),
+      mobile: formData.get("mobile"),
+      accountType: formData.get("accountType"),
+      accountValue: formData.get("accountValue"),
+    };
 
     try {
       const res = await fetch("/api/submit-claim", {
         method: "POST",
-        body: formData,
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload),
       });
 
-      const data = await res.json();
+      let data;
+      try {
+        data = await res.json();
+      } catch (e) {
+        throw new Error("Backend connection failed. Please try again.");
+      }
 
       if (!res.ok) {
         throw new Error(data.message || "Something went wrong");

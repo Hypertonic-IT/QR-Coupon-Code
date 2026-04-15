@@ -8,7 +8,8 @@ const Papa = require('papaparse');
 
 const app = express();
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cookieParser());
 
 const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key-for-dev';
@@ -183,11 +184,12 @@ app.post('/api/submit-claim', (req, res) => {
         name,
         mobile,
         accountType,
-        accountValue
+        accountValue,
+        screenshotUrl: req.body.screenshot || ''
     });
 
     res.json({ message: 'Claim submitted successfully' });
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
