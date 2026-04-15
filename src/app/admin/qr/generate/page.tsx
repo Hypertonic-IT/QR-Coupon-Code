@@ -9,8 +9,8 @@ import { QRCodeCanvas } from 'qrcode.react';
 
 export default function GenerateQRCodes() {
     const [generating, setGenerating] = useState(false);
-    const [count, setCount] = useState(10);
-    const [value, setValue] = useState(50);
+    const [count, setCount] = useState<number | ''>(10);
+    const [value, setValue] = useState<number | ''>(50);
     const [success, setSuccess] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
@@ -56,7 +56,7 @@ export default function GenerateQRCodes() {
             const res = await fetch('/api/admin/qr/generate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ count, value }),
+                body: JSON.stringify({ count: Number(count) || 1, value: Number(value) || 1 }),
             });
             if (res.ok) {
                 const data = await res.json();
@@ -186,7 +186,7 @@ export default function GenerateQRCodes() {
                                         <div>
                                             <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'rgba(165,180,252,0.7)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 10 }}>Quantity (Max 500)</label>
                                             <div style={{ position: 'relative' }}>
-                                                <input type="number" value={count} min={1} max={500} onChange={e => setCount(parseInt(e.target.value) || 1)}
+                                                <input type="number" value={count} min={1} max={500} onChange={e => setCount(e.target.value === '' ? '' : parseInt(e.target.value))}
                                                     style={{ width: '100%', height: 54, boxSizing: 'border-box', paddingLeft: 46, paddingRight: 16, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 12, fontSize: '1.1rem', fontWeight: 700, color: '#fff', outline: 'none', transition: 'all 0.2s' }}
                                                     onFocus={e => { e.target.style.borderColor = 'rgba(165,180,252,0.6)'; e.target.style.boxShadow = '0 0 0 4px rgba(99,102,241,0.2)'; }}
                                                     onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.15)'; e.target.style.boxShadow = 'none'; }}
@@ -197,7 +197,7 @@ export default function GenerateQRCodes() {
                                         <div>
                                             <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'rgba(165,180,252,0.7)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 10 }}>Cashback Value (₹)</label>
                                             <div style={{ position: 'relative' }}>
-                                                <input type="number" value={value} min={1} onChange={e => setValue(parseInt(e.target.value) || 1)}
+                                                <input type="number" value={value} min={1} onChange={e => setValue(e.target.value === '' ? '' : parseInt(e.target.value))}
                                                     style={{ width: '100%', height: 54, boxSizing: 'border-box', paddingLeft: 46, paddingRight: 16, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 12, fontSize: '1.1rem', fontWeight: 700, color: '#fff', outline: 'none', transition: 'all 0.2s' }}
                                                     onFocus={e => { e.target.style.borderColor = 'rgba(165,180,252,0.6)'; e.target.style.boxShadow = '0 0 0 4px rgba(99,102,241,0.2)'; }}
                                                     onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.15)'; e.target.style.boxShadow = 'none'; }}
@@ -210,7 +210,7 @@ export default function GenerateQRCodes() {
                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 28 }}>
                                         <div style={{ background: 'rgba(255,255,255,0.06)', borderRadius: 12, padding: '12px 20px', display: 'flex', alignItems: 'center', gap: 10 }}>
                                             <span style={{ fontSize: '0.8rem', color: 'rgba(165,180,252,0.6)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Total Value:</span>
-                                            <span style={{ fontSize: '1.3rem', fontWeight: 900, color: '#c7d2fe' }}>₹{(count * value).toLocaleString('en-IN')}</span>
+                                            <span style={{ fontSize: '1.3rem', fontWeight: 900, color: '#c7d2fe' }}>₹{((Number(count) || 0) * (Number(value) || 0)).toLocaleString('en-IN')}</span>
                                         </div>
 
                                         <button type="submit" disabled={generating} style={{ height: 54, padding: '0 32px', background: generating ? 'rgba(255,255,255,0.06)' : 'linear-gradient(135deg,#6366f1,#8b5cf6)', color: generating ? 'rgba(255,255,255,0.4)' : '#fff', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 12, cursor: generating ? 'not-allowed' : 'pointer', fontSize: '1rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: 10, boxShadow: generating ? 'none' : '0 8px 24px rgba(99,102,241,0.4)', transition: 'all 0.2s' }}>

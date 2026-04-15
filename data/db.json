@@ -79,6 +79,262 @@
       "isUsed": false,
       "status": "UNPAID",
       "createdAt": "2026-04-08T07:04:06.268Z"
+    },
+    {
+      "uniqueCode": "7EE26C",
+      "value": 50,
+      "_id": "ad2f5eb3-f305-4d84-b9f3-506e4622b47f",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:07:39.735Z"
+    },
+    {
+      "uniqueCode": "B00012",
+      "value": 50,
+      "_id": "d312f545-fcca-4da5-8660-59043077cc4c",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:07:39.735Z"
+    },
+    {
+      "uniqueCode": "4A6E6A",
+      "value": 50,
+      "_id": "0535efc5-0281-4a35-8ec9-fdf9becf1cf7",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:07:39.735Z"
+    },
+    {
+      "uniqueCode": "4CD0F7",
+      "value": 50,
+      "_id": "97f1d167-cbd5-47c7-a532-adda23a743bc",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:07:39.735Z"
+    },
+    {
+      "uniqueCode": "06C6B9",
+      "value": 50,
+      "_id": "6fd71066-db64-46e0-a043-0f6325d4bacc",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:07:39.735Z"
+    },
+    {
+      "uniqueCode": "5745BD",
+      "value": 50,
+      "_id": "9f79f7f0-828c-42dd-a409-3b911eca1ec4",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:07:39.735Z"
+    },
+    {
+      "uniqueCode": "143550",
+      "value": 50,
+      "_id": "9a794b25-f35d-4ff7-add2-0be671f700af",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:07:39.735Z"
+    },
+    {
+      "uniqueCode": "9F863C",
+      "value": 50,
+      "_id": "0cd929fa-2746-4b98-b5bc-b2fb55473756",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:07:39.735Z"
+    },
+    {
+      "uniqueCode": "45286B",
+      "value": 50,
+      "_id": "c77c2c87-df8d-4b71-a808-7179cadff88e",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:07:39.735Z"
+    },
+    {
+      "uniqueCode": "3D976C",
+      "value": 50,
+      "_id": "79593f6a-6eef-4dfa-b21e-4f9699b60a51",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:07:39.736Z"
+    },
+    {
+      "uniqueCode": "5079F1",
+      "value": 50,
+      "_id": "5ff3067c-d5a0-435d-ba7d-ec32cc4442f6",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:14:06.312Z"
+    },
+    {
+      "uniqueCode": "4E6E2E",
+      "value": 50,
+      "_id": "d76bb6f8-49f7-43e7-9dd0-66c302b61b3c",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:14:06.312Z"
+    },
+    {
+      "uniqueCode": "98081F",
+      "value": 50,
+      "_id": "b3ddb275-9137-4d34-9e9f-817e301cdf1d",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:14:06.312Z"
+    },
+    {
+      "uniqueCode": "EF6C07",
+      "value": 50,
+      "_id": "9e2f38af-12a4-4197-8181-cf2f9d07f972",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:14:06.312Z"
+    },
+    {
+      "uniqueCode": "E5C8E8",
+      "value": 50,
+      "_id": "98be6561-7e50-48d7-8cc8-e3fafc7da2c8",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:14:06.312Z"
+    },
+    {
+      "uniqueCode": "1D2B52",
+      "value": 50,
+      "_id": "f3bb87a8-e865-4072-bfaf-4c1853cabdf1",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:14:06.312Z"
+    },
+    {
+      "uniqueCode": "3533EE",
+      "value": 50,
+      "_id": "03a585eb-8c94-4177-bfa4-bae22b5867f0",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:14:06.312Z"
+    },
+    {
+      "uniqueCode": "A26FE0",
+      "value": 50,
+      "_id": "d5479fca-0723-441c-b16c-cceded686153",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:14:06.312Z"
+    },
+    {
+      "uniqueCode": "B16871",
+      "value": 50,
+      "_id": "7075ec5a-dcea-4e74-a8d7-c9c1d5a89dd2",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:14:06.312Z"
+    },
+    {
+      "uniqueCode": "95F4A9",
+      "value": 50,
+      "_id": "a4c8c62a-7a39-4bce-856d-8c901420718e",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:14:06.312Z"
+    },
+    {
+      "uniqueCode": "97E1DD",
+      "value": 1200,
+      "_id": "459aff98-1a78-4848-a912-8bd4743c5c0b",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:14:36.938Z"
+    },
+    {
+      "uniqueCode": "F7E546",
+      "value": 1200,
+      "_id": "dfd568fb-e16c-455c-939f-993214a74758",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:14:36.938Z"
+    },
+    {
+      "uniqueCode": "229E76",
+      "value": 1200,
+      "_id": "ac8fc39b-0577-4500-a3c5-25cf36464ad4",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:14:36.938Z"
+    },
+    {
+      "uniqueCode": "FB7476",
+      "value": 1200,
+      "_id": "beb79017-e0d9-4b29-bf3b-4e5d9c8f80b4",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:14:36.938Z"
+    },
+    {
+      "uniqueCode": "7D2734",
+      "value": 1200,
+      "_id": "c85110b8-ff12-4ae2-a8ef-56b1a24b2295",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:14:36.938Z"
+    },
+    {
+      "uniqueCode": "EB1440",
+      "value": 1200,
+      "_id": "5f1fa2e9-d9b3-4f91-8eb2-146f677eed42",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:14:36.938Z"
+    },
+    {
+      "uniqueCode": "BAF2CD",
+      "value": 1200,
+      "_id": "aa67875e-303c-4d5d-9286-9b38cead7435",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:14:36.938Z"
+    },
+    {
+      "uniqueCode": "790E06",
+      "value": 1200,
+      "_id": "07bab39a-b517-4165-9231-7ed1150916f3",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:14:36.938Z"
+    },
+    {
+      "uniqueCode": "F10425",
+      "value": 1200,
+      "_id": "43458f23-8467-4147-9ff1-150c6c46c668",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:14:36.938Z"
+    },
+    {
+      "uniqueCode": "A57510",
+      "value": 1200,
+      "_id": "0807f10e-e278-4a0b-94b7-2d072126d987",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:14:36.938Z"
+    },
+    {
+      "uniqueCode": "8CBA15",
+      "value": 1200,
+      "_id": "0946efbb-2835-45f8-8d3d-3fadb4fafcd2",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:14:36.938Z"
+    },
+    {
+      "uniqueCode": "CCEFE4",
+      "value": 1200,
+      "_id": "b4a25b26-7292-41d2-b2e5-524d7a893d59",
+      "isUsed": false,
+      "status": "UNPAID",
+      "createdAt": "2026-04-10T13:14:36.938Z"
     }
   ],
   "submissions": [
@@ -96,7 +352,7 @@
   "admins": [
     {
       "username": "admin",
-      "passwordHash": "bc78e58d55cde1346e68f8e5fe588dedf62fa457aa646a500a53347faff6ee24"
+      "passwordHash": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9"
     }
   ]
 }
