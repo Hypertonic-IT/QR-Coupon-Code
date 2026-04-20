@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   async rewrites() {
-    const backendUrl = process.env.BACKEND_URL || "http://localhost:5001";
+    const backendUrl = process.env.BACKEND_URL || "http://node.coupenqrcode.clients.hypertonic.co";
     return [
       {
         source: "/api/:path*",

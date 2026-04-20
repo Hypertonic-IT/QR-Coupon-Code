@@ -4,7 +4,7 @@ import { QrCode, AlertCircle } from "lucide-react";
 
 async function getCoupon(id) {
   try {
-    const res = await fetch(`http://localhost:5001/api/public/qr/${id}`, {
+    const res = await fetch(`http://node.coupenqrcode.clients.hypertonic.co/api/public/qr/${id}`, {
       cache: "no-store",
     });
     if (!res.ok) return null;
