@@ -7,7 +7,7 @@ export default async function RewardPage({ params }) {
 
   let coupon = null;
   try {
-    const res = await fetch(`http://localhost:5000/api/qr/${id}`, {
+    const res = await fetch(`http://localhost:5001/api/qr/${id}`, {
       cache: 'no-store'
     });
     if (res.ok) {
