@@ -2,21 +2,20 @@ import React from "react";
 import RewardClient from "@/components/RewardClient";
 import { QrCode, AlertCircle } from "lucide-react";
 
-async function getCoupon(id) {
-  try {
-    const res = await fetch(`http://node.coupenqrcode.clients.hypertonic.co/api/public/qr/${id}`, {
-      cache: "no-store",
-    });
-    if (!res.ok) return null;
-    return await res.json();
-  } catch {
-    return null;
-  }
-}
-
 export default async function RewardPage({ params }) {
   const { id } = await params;
-  const coupon = await getCoupon(id);
+
+  let coupon = null;
+  try {
+    const res = await fetch(`http://localhost:5000/api/qr/${id}`, {
+      cache: 'no-store'
+    });
+    if (res.ok) {
+      coupon = await res.json();
+    }
+  } catch (err) {
+    console.error("Error fetching coupon:", err);
+  }
 
   if (!coupon) {
     return (

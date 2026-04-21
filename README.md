@@ -56,8 +56,17 @@ Default Credentials:
 - **Password:** `admin123`
 
 ## Project Structure
-- `src/app`: App Router pages and API routes.
-- `src/components`: Reusable UI components.
-- `src/lib`: Shared utilities (DB, Cloudinary).
-- `src/models`: Mongoose database schemas.
-- `src/styles`: CSS variables and global styling.
+- `frontend/`: Next.js application (Port 3000).
+  - `src/app`: Pages and UI logic.
+  - `src/components`: Reusable UI components.
+  - `src/lib/api.js`: API utility for backend communication.
+- `backend/`: Express.js server (Port 5000).
+  - `src/server.js`: Entry point.
+  - `src/routes/`: Express API routes.
+  - `src/lib/storage.js`: Local JSON database engine.
+  - `data/`: Database storage folder.
+
+## Running the Project
+1. Install dependencies: `npm install`
+2. Start both: `npm run dev`
+
