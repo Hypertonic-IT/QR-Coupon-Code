@@ -2,11 +2,15 @@ import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 
-const DB_PATH = path.join(process.cwd(), "data", "db.json");
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const DB_PATH = path.join(__dirname, "..", "..", "data", "db.json");
 
 // Ensure data directory exists
-if (!fs.existsSync(path.join(process.cwd(), "data"))) {
-  fs.mkdirSync(path.join(process.cwd(), "data"));
+if (!fs.existsSync(path.join(__dirname, "..", "..", "data"))) {
+  fs.mkdirSync(path.join(__dirname, "..", "..", "data"));
 }
 
 // Initial structure
