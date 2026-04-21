@@ -1,21 +1,11 @@
 import React from "react";
+import { storage } from "@/lib/storage";
 import RewardClient from "@/components/RewardClient";
 import { QrCode, AlertCircle } from "lucide-react";
 
 export default async function RewardPage({ params }) {
   const { id } = await params;
-
-  let coupon = null;
-  try {
-    const res = await fetch(`http://localhost:5001/api/qr/${id}`, {
-      cache: 'no-store'
-    });
-    if (res.ok) {
-      coupon = await res.json();
-    }
-  } catch (err) {
-    console.error("Error fetching coupon:", err);
-  }
+  const coupon = storage.getCouponByCode(id);
 
   if (!coupon) {
     return (
